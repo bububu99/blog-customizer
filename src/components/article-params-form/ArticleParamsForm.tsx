@@ -14,20 +14,18 @@ import {
 	defaultArticleState,
 	ArticleStateType,
 } from 'src/constants/articleProps';
-import { useState, useRef } from 'react';
+import { useState, useRef, FormEvent } from 'react';
 import styles from './ArticleParamsForm.module.scss';
 import { useOutsideClickClose } from 'src/ui/select/hooks/useOutsideClickClose';
 import clsx from 'clsx';
 
 type ArticleParamsFormProps = {
 	onApply: (state: ArticleStateType) => void;
-	onReset: () => void;
 	currentSettings: ArticleStateType;
 };
 
 export const ArticleParamsForm = ({
 	onApply,
-	onReset,
 	currentSettings,
 }: ArticleParamsFormProps) => {
 	const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -46,14 +44,15 @@ export const ArticleParamsForm = ({
 		setFormState((prev) => ({ ...prev, [key]: value }));
 	};
 
-	const handleReset = () => {
+	const handleReset = (e: FormEvent) => {
+		e.preventDefault();
 		setFormState(defaultArticleState);
-		onReset();
+		onApply(defaultArticleState);
 	};
 
-	const handleSubmit = () => {
+	const handleSubmit = (e: FormEvent) => {
+		e.preventDefault();
 		onApply(formState);
-		setIsMenuOpen(false);
 	};
 
 	return (
@@ -66,7 +65,10 @@ export const ArticleParamsForm = ({
 				className={clsx(styles.container, {
 					[styles.container_open]: isMenuOpen,
 				})}>
-				<form className={styles.form} onSubmit={(e) => e.preventDefault()}>
+				<form
+					className={styles.form}
+					onSubmit={handleSubmit}
+					onReset={handleReset}>
 					<Text size={31} weight={800} uppercase>
 						Задайте параметры
 					</Text>
@@ -110,8 +112,8 @@ export const ArticleParamsForm = ({
 					/>
 
 					<div className={styles.bottomContainer}>
-						<Button title='Сбросить' type='clear' onClick={handleReset} />
-						<Button title='Применить' type='apply' onClick={handleSubmit} />
+						<Button title='Сбросить' htmlType='reset' type='clear' />
+						<Button title='Применить' htmlType='submit' type='apply' />
 					</div>
 				</form>
 			</aside>

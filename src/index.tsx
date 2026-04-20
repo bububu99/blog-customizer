@@ -1,6 +1,5 @@
 import { createRoot } from 'react-dom/client';
 import { StrictMode, CSSProperties, useState } from 'react';
-import clsx from 'clsx';
 
 import { Article } from './components/article/Article';
 import { ArticleParamsForm } from './components/article-params-form/ArticleParamsForm';
@@ -18,10 +17,10 @@ const root = createRoot(domNode);
 const App = () => {
 	const [articleState, setArticleState] =
 		useState<ArticleStateType>(defaultArticleState);
-	const handleReset = () => setArticleState(defaultArticleState);
+
 	return (
 		<main
-			className={clsx(styles.main)}
+			className={styles.main}
 			style={
 				{
 					'--font-family': articleState.fontFamilyOption.value,
@@ -33,7 +32,6 @@ const App = () => {
 			}>
 			<ArticleParamsForm
 				onApply={setArticleState}
-				onReset={handleReset}
 				currentSettings={articleState}
 			/>
 			<Article />
